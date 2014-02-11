@@ -1,0 +1,80 @@
+(units.ps) run
+
+/arc_hole_depth 5 mm def
+/arc_hole_width 5 mm def
+/arc_hole_margin arc_hole_depth arc_hole_width 2 div add def
+/arc_hole_interval 1 inch def
+/arc_hole_count 5 def
+/arc_hole_range arc_hole_interval arc_hole_count mul def
+/arc_hole_crosshair_radius 2 mm def
+/arc_holes_on_left true def
+% Note: arc_holes_on_left is changed later on.
+
+/draw_one {
+	gsave
+		% First, plot the ARC holes.
+		arc_holes_on_left {
+		} {
+			page_width 2 div 0 translate
+			-1 +1 scale
+		} ifelse
+		0 page_height 2 div 2 div arc_hole_range 2 div sub arc_hole_interval 2 div add translate
+		0 1 arc_hole_count 1 sub {
+			arc_hole_interval mul arc_hole_depth exch moveto
+
+			arc_hole_crosshair_radius neg 0 rmoveto
+			arc_hole_crosshair_radius 2 mul 0 rlineto
+			arc_hole_crosshair_radius neg dup rmoveto
+			0 arc_hole_crosshair_radius 2 mul rlineto
+		} for
+		stroke
+	grestore
+
+	gsave
+		arc_holes_on_left {
+			arc_hole_margin
+		} {
+			arc_hole_margin neg
+		} ifelse
+		0 translate
+
+		20 dict begin
+			one_page_filename run
+		end
+	grestore
+} def
+
+/draw_column {
+	draw_one
+	0 page_height 2 div translate
+	draw_one
+} def
+
+/draw_four {
+	0 page_height 2 div moveto
+	1 cm 0 rlineto
+	page_width 2 div 2 cm sub 0 rmoveto
+	2 cm 0 rlineto
+	page_width 2 div 2 cm sub 0 rmoveto
+	1 cm 0 rlineto
+	page_width 2 div 0 moveto
+	0 1 cm rlineto
+	0 page_height 2 div 2 cm sub rmoveto
+	0 2 cm rlineto
+	0 page_height 2 div 2 cm sub rmoveto
+	0 1 cm rlineto
+	stroke
+	
+	gsave
+	draw_column
+	grestore
+	page_width 2 div 0 translate
+	draw_column
+} def
+
+draw_four
+showpage
+
+/arc_holes_on_left arc_holes_on_left not def
+draw_four
+showpage
