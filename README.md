@@ -1,6 +1,8 @@
 # Arc notebook mobile UI mockup templates
 ## Printable refill pages for small Staples Arc notebooks for mocking up mobile device UI
 
+![Here's what it looks like.](iPhone-Arc-mockup-example.jpg)
+
 This is a set of PDFs that you can print out, cut into quarters, feed to an Arc hole punch, and then put into a “compact” (5×6 inch) Arc notebook, and use to mock up user interfaces for mobile (e.g., iPhone) applications.
 
 **Make sure you print the PDF at *exactly* 100% scale.** Don't use “Scale to Fit Page” or anything similar. Otherwise, the measurements will be off.
