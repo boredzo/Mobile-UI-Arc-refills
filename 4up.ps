@@ -7,8 +7,7 @@
 /arc_hole_count 5 def
 /arc_hole_range arc_hole_interval arc_hole_count mul def
 /arc_hole_crosshair_radius 2 mm def
-/arc_holes_on_left true def
-% Note: arc_holes_on_left is changed later on.
+% Must be defined: /arc_holes_on_left true/false def
 
 /draw_one {
 	gsave
@@ -72,9 +71,5 @@
 	draw_column
 } def
 
-draw_four
-showpage
-
-/arc_holes_on_left arc_holes_on_left not def
 draw_four
 showpage
