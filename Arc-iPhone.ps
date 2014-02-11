@@ -1,0 +1,95 @@
+% Must be already defined:
+% page_width
+% page_height
+% pixels_per_inch
+% screen_width_px
+% screen_height_px
+% scale_factor (2.0 for Retina; 1.0 for non-Retina)
+
+(units.ps) run
+
+/px { pixels_per_inch div inch } def
+/devpt { px scale_factor div } def
+
+/screen_width screen_width_px px def
+/screen_height screen_height_px px def
+
+1.0 300.0 div inch setlinewidth
+0.5 setgray
+
+/margin_width 2 mm def
+
+/status_bar_height 42 px def
+/nav_bar_height 88 px def
+/tab_bar_height 98 px def
+
+% width height -> plot_rect -> -
+% Requires current point to already be set.
+/plot_rect {
+	2 dict begin
+		/rect_height exch def
+		/rect_width exch def
+
+		rect_width 0 rlineto
+		0 rect_height rlineto
+		rect_width neg 0 rlineto
+		closepath
+	end
+} def
+
+/plot_screen_frame {
+	0 0 moveto
+	screen_width screen_height plot_rect
+} def
+
+% left(bool) y_offset(number) height(number) -> plot_guide -> -
+% If height is negative, y_offset is from the top. Otherwise, it's from the bottom.
+/plot_guide {
+	gsave
+	3 dict begin
+		/guide_height exch def
+		/y_offset exch def
+		/is_left exch def
+
+		is_left not {
+			% We should be on the right. Flip x axis.
+			screen_width 0 translate
+			-1 +1 scale
+		} if
+
+		margin_width neg 0 moveto
+		margin_width screen_height plot_rect
+		screen_width 2 div 0 moveto
+		screen_width 2 div screen_height plot_rect
+		clip newpath
+
+		0
+		guide_height 0 le {
+			screen_height y_offset sub
+		} {
+			y_offset
+		} ifelse
+		translate
+
+		margin_width neg 0 moveto
+		screen_width margin_width add guide_height plot_rect
+		stroke
+	end
+	grestore
+} def
+
+page_width 2 div screen_width 2 div sub
+page_height 2 div screen_height 2 div sub
+translate
+
+plot_screen_frame stroke
+
+false 0 status_bar_height neg plot_guide
+false status_bar_height nav_bar_height neg plot_guide
+false 0 tab_bar_height plot_guide
+
+% Status bar hidden
+true 0 nav_bar_height neg plot_guide
+true 0 tab_bar_height plot_guide
+
+showpage
